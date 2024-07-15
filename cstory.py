@@ -77,8 +77,12 @@ class ChatStory:
             if ch == ord('\n'):
                 break
             elif ch == ord('\b'):
-                # do something
-                pass
+                y, x = self._pmtscr.getyx()
+                if x > 2:
+                    self._pmtscr.move(y, x - 1)
+                    self._pmtscr.clrtoeol()
+
+                    buffer = buffer[:-1]
             elif ch == 4:
                 return -1
             else:
