@@ -13,6 +13,7 @@ class ChatStory:
         self._desc = desc
 
         self._screen = None
+        self._scrbuf = {}   # screen buffer
 
     def _prestart(self, screen):
         """Set up screen properties.
