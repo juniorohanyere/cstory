@@ -15,7 +15,7 @@ class ChatStory:
         self._stdscr = None
         self._pmtscr = None
 
-        self.__scrbuf__ = {}   # screen buffer
+        self._scrbuf = []   # screen buffer
 
         self.__elems__ = []
 
@@ -30,10 +30,8 @@ class ChatStory:
         y, x = self._stdscr.getmaxyx()
         # create a prompt screen
         self._pmtscr = self._stdscr.derwin(1, x, y - 1, 0)
-        self._getline(a)
 
         self.__start__()
-        self._stdscr.getch()
 
     def __getscr__(self):
         """Return the screen used to display contents.
@@ -45,17 +43,16 @@ class ChatStory:
         """Update the chat story screen.
         """
 
-        strip_buf = buffer.strip()
-        buf = strip_buf.split('\n')
         line = ''
 
-        length = len(buf)
-        y, _ = self._screen.getyx()
+        length = len(buffer)
+        y, _ = self._stdscr.getyx()
 
         for i in range(length):
             y += 1
-            self._scrbuf += [buf[i]]
-            self._stdscr.addstr(y, 0, buf[i])
+            self._scrbuf += [buffer[i]]
+            self._stdscr.addstr(y, 0, buffer[i][0], buffer[i][1])
+            self._stdscr.refresh()
 
             flag = self._getline(line)
             self._pmtscr.erase()
@@ -68,6 +65,7 @@ class ChatStory:
         """
 
         i = 0
+        curses.curs_set(1)
 
         while True:
             ch = self._pmtscr.getch()
@@ -78,7 +76,7 @@ class ChatStory:
                     break
                 case '\b':
                     # do something
-                    break
+                    pass
                 case _:
                     self._pmtscr.addstr(s)
                     self._pmtscr.refresh()
