@@ -12,16 +12,18 @@ class ChatStory:
         self._title = title
         self._desc = desc
 
-        self._screen = None
+        self._stdscr = None
+        self._pmtscr = None
+
         self.__scrbuf__ = {}   # screen buffer
 
         self.__elems__ = []
 
-    def _prestart(self, screen):
+    def _prestart(self, stdscr):
         """Set up screen properties.
         """
 
-        self._screen = screen
+        self._stdscr = stdscr
 
         curses.curs_set(0)
 
@@ -31,7 +33,7 @@ class ChatStory:
         """Return the screen used to display contents.
         """
 
-        return self._screen
+        return self._stdscr
 
     def __update__(self, buffer):
         """Update the chat story screen.
@@ -46,7 +48,7 @@ class ChatStory:
         for i in range(length):
             y += 1
             self._scrbuf += [buf[i]]
-            self._screen.addstr(y, 0, buf[i])
+            self._stdscr.addstr(y, 0, buf[i])
             self._getline()
 
     def _getline(self, buffer):
@@ -57,11 +59,25 @@ class ChatStory:
         i = 0
 
         while True:
-            ch = self._screen.getch()
-            if ch == curses.KEY_ENTER:
-                return i
-            elif ch == curses.KEY_BACKSPACE:
-                pass
+            ch = self._stdscr.getch()
+            match ch:
+                case curses.KEY_ENTER:
+                    return i
+                case curses.KEY_BACKSPACE:
+                    # do something
+                    break
+                case _:
+                    char = chr(ch)
+                    self._stdscr.addstr(char)
+                    self._stdscr.refresh()
+                    s += s + char
+                    i += 1
+
+                    break
+
+        curses.curs_set(0)
+
+        return i
 
     def __start__(self):
         """Entry point for a user program, called by _prestart method.
