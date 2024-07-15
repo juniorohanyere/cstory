@@ -1,6 +1,8 @@
 """Create a new element.
 """
 
+import curses
+
 
 class Create:
     """Create a new element for sending messages to the chat story screen.
@@ -35,5 +37,8 @@ class Create:
         """Post a message to the screen.
         """
 
-        buffer = f'{self._dname}\n{msg}'
+        buffer = [(self._dname, curses.A_BOLD)]
+        buffer += [(msg, curses.A_NORMAL)]
+        buffer += [('', curses.A_NORMAL)]
+
         self._cs.__update__(buffer)
