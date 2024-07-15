@@ -25,17 +25,23 @@ class ChatStory:
 
         self.__start__()
 
+    def __getscr__(self):
+        """Return the screen used to display contents.
+        """
+
+        return self._screen
+
     def __start__(self):
         """Entry point for a user program, called by _prestart method.
         """
 
-    def title(self):
+    def get_title(self):
         """Return the title of the chat story.
         """
 
         return (self._title)
 
-    def description(self):
+    def get_desc(self):
         """Return the description of the chat story.
         """
 
