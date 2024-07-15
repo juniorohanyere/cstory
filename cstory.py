@@ -2,6 +2,7 @@
 """
 
 import curses
+import sys
 
 
 class ChatStory:
@@ -30,6 +31,7 @@ class ChatStory:
         y, x = self._stdscr.getmaxyx()
         # create a prompt screen
         self._pmtscr = self._stdscr.derwin(1, x, y - 1, 0)
+        self._pmtscr.keypad(True)
 
         self.__start__()
 
@@ -54,11 +56,12 @@ class ChatStory:
             self._stdscr.addstr(y, 0, buffer[i][0], buffer[i][1])
             self._stdscr.refresh()
 
+            self._pmtscr.addstr('$ ', curses.A_BOLD)
             flag = self._getline(line)
             self._pmtscr.erase()
 
             if flag == -1:
-                return (0)
+                sys.exit()
 
     def _getline(self, buffer):
         """Get line of input from a prompt panel.
@@ -71,17 +74,18 @@ class ChatStory:
             ch = self._pmtscr.getch()
             s = chr(ch)
 
-            match s:
-                case '\n':
-                    break
-                case '\b':
-                    # do something
-                    pass
-                case _:
-                    self._pmtscr.addstr(s)
-                    self._pmtscr.refresh()
-                    buffer += s
-                    i += 1
+            if ch == ord('\n'):
+                break
+            elif ch == ord('\b'):
+                # do something
+                pass
+            elif ch == 4:
+                return -1
+            else:
+                self._pmtscr.addstr(s)
+                self._pmtscr.refresh()
+                buffer += s
+                i += 1
 
         curses.curs_set(0)
 
