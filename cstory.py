@@ -25,8 +25,12 @@ class ChatStory:
         """
 
         self._stdscr = stdscr
-        a = ''
+
         curses.curs_set(0)
+        curses.start_color()
+
+        self._stdscr.idlok(True)
+        self._stdscr.scrollok(True)
 
         y, x = self._stdscr.getmaxyx()
         # create a prompt screen
@@ -49,10 +53,17 @@ class ChatStory:
 
         length = len(buffer)
         y, _ = self._stdscr.getyx()
+        maxy, maxx = self._stdscr.getmaxyx()
+        max_y, max_x = maxy - 1, maxx
 
         for i in range(length):
             y += 1
             self._scrbuf += [buffer[i]]
+            if y == max_y:
+                y, _ = self._stdscr.getyx()
+                self._stdscr.scroll()
+                self._stdscr.move(y, 0)
+
             self._stdscr.addstr(y, 0, buffer[i][0], buffer[i][1])
             self._stdscr.refresh()
 
@@ -84,7 +95,8 @@ class ChatStory:
 
                     buffer = buffer[:-1]
             elif ch == 4:
-                return -1
+                i = -1
+                break
             else:
                 self._pmtscr.addstr(s)
                 self._pmtscr.refresh()
