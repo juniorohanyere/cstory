@@ -25,6 +25,10 @@ class ChatStory:
 
         self._stdscr = stdscr
 
+        y, x = self._stdscr.getmaxyx()
+        # create a prompt screen
+        self._pmtscr = self._stdscr.derwin(2, x, y - 2, 0)
+
         curses.curs_set(0)
 
         self.__start__()
@@ -41,6 +45,7 @@ class ChatStory:
 
         strip_buf = buffer.strip()
         buf = strip_buf.split('\n')
+        line = ''
 
         length = len(buf)
         y, _ = self._screen.getyx()
@@ -49,7 +54,7 @@ class ChatStory:
             y += 1
             self._scrbuf += [buf[i]]
             self._stdscr.addstr(y, 0, buf[i])
-            self._getline()
+            self._getline(line)
 
     def _getline(self, buffer):
         """Get line of input from a prompt panel.
@@ -59,7 +64,7 @@ class ChatStory:
         i = 0
 
         while True:
-            ch = self._stdscr.getch()
+            ch = self._pmtscr.getch()
             match ch:
                 case curses.KEY_ENTER:
                     return i
@@ -68,8 +73,8 @@ class ChatStory:
                     break
                 case _:
                     char = chr(ch)
-                    self._stdscr.addstr(char)
-                    self._stdscr.refresh()
+                    self._pmtscr.addstr(char)
+                    self._pmtscr.refresh()
                     s += s + char
                     i += 1
 
