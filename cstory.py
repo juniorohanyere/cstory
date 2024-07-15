@@ -54,7 +54,12 @@ class ChatStory:
             y += 1
             self._scrbuf += [buf[i]]
             self._stdscr.addstr(y, 0, buf[i])
-            self._getline(line)
+
+            flag = self._getline(line)
+            self._pmtscr.erase()
+
+            if flag == -1:
+                return (0)
 
     def _getline(self, buffer):
         """Get line of input from a prompt panel.
