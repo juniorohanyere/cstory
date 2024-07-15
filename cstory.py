@@ -22,6 +22,12 @@ class ChatStory:
 
         curses.curs_set(0)
 
+        self.__start__()
+
+    def __start__(self):
+        """Entry point for a user program, called by _prestart method.
+        """
+
     def title(self):
         """Return the title of the chat story.
         """
