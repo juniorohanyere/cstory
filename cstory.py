@@ -24,14 +24,16 @@ class ChatStory:
         """
 
         self._stdscr = stdscr
+        a = ''
+        curses.curs_set(0)
 
         y, x = self._stdscr.getmaxyx()
         # create a prompt screen
-        self._pmtscr = self._stdscr.derwin(2, x, y - 2, 0)
-
-        curses.curs_set(0)
+        self._pmtscr = self._stdscr.derwin(1, x, y - 1, 0)
+        self._getline(a)
 
         self.__start__()
+        self._stdscr.getch()
 
     def __getscr__(self):
         """Return the screen used to display contents.
@@ -65,25 +67,23 @@ class ChatStory:
         """Get line of input from a prompt panel.
         """
 
-        s = ''
         i = 0
 
         while True:
             ch = self._pmtscr.getch()
-            match ch:
-                case curses.KEY_ENTER:
-                    return i
-                case curses.KEY_BACKSPACE:
+            s = chr(ch)
+
+            match s:
+                case '\n':
+                    break
+                case '\b':
                     # do something
                     break
                 case _:
-                    char = chr(ch)
-                    self._pmtscr.addstr(char)
+                    self._pmtscr.addstr(s)
                     self._pmtscr.refresh()
-                    s += s + char
+                    buffer += s
                     i += 1
-
-                    break
 
         curses.curs_set(0)
 
