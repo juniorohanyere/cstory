@@ -4,7 +4,7 @@
 import curses
 
 
-class Create:
+class Element:
     """Create a new element for sending messages to the chat story screen.
     """
 
@@ -33,7 +33,7 @@ class Create:
 
         return (self._dname, self._fname, self._lname)
 
-    def push(self, tag=None, msg=''):
+    def echo(self, tag=None, msg=''):
         """Post a message to the screen.
         """
 
