@@ -37,6 +37,8 @@ class Element:
         """Post a message to the screen.
         """
 
+        tag = tag if tag else None
+
         buffer = [(self._dname, curses.A_BOLD)]
         buffer += [(msg, curses.A_NORMAL)]
         buffer += [('', curses.A_NORMAL)]

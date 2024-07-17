@@ -6,6 +6,9 @@ import sys
 
 
 class ChatStory:
+    """Chat Story class
+    """
+
     def __init__(self, title, desc):
         """Initialize self. See help(type(self)) for accurate signature.
         """
@@ -18,7 +21,7 @@ class ChatStory:
 
         self._scrbuf = []   # screen buffer
 
-        self.__elems__ = []
+        self._elems = []
 
     def _prestart(self, stdscr):
         """Set up screen properties.
@@ -54,7 +57,7 @@ class ChatStory:
         length = len(buffer)
         y, _ = self._stdscr.getyx()
         maxy, maxx = self._stdscr.getmaxyx()
-        max_y, max_x = maxy - 1, maxx
+        max_y, _ = maxy - 1, maxx
 
         for i in range(length):
             y += 1
@@ -75,7 +78,14 @@ class ChatStory:
                 sys.exit()
 
     def _getline(self, buffer):
-        """Get line of input from a prompt panel.
+        """Get line of input from a prompt panel, setting newline character as
+        the delimiter.
+
+        Args:
+            buffer (str): str object to store line of input.
+
+        Return:
+            return the number of characters read.
         """
 
         i = 0
@@ -87,16 +97,19 @@ class ChatStory:
 
             if ch == ord('\n'):
                 break
-            elif ch == ord('\b'):
+
+            if ch == 4:
+                i = -1
+                break
+
+            if ch == ord('\b'):
                 y, x = self._pmtscr.getyx()
                 if x > 2:
                     self._pmtscr.move(y, x - 1)
                     self._pmtscr.clrtoeol()
 
                     buffer = buffer[:-1]
-            elif ch == 4:
-                i = -1
-                break
+                    i -= 1
             else:
                 self._pmtscr.addstr(s)
                 self._pmtscr.refresh()
@@ -115,7 +128,7 @@ class ChatStory:
         """Return the title of the chat story.
         """
 
-        return (self._title)
+        return self._title
 
     def get_desc(self):
         """Return the description of the chat story.
